@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Schellhammer
+    given-names: Sebastian
+type: software
+title: "SciTweets Heuristics - Heuristics of Science-Relatedness of Tweets"
+version: 1.0

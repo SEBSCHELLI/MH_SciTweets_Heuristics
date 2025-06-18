@@ -1,0 +1,4 @@
+pandas==2.1.1
+nltk==3.8.1
+tldextract==3.2.0
+space==3.7.2
