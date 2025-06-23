@@ -130,22 +130,21 @@ The file **example_tweets.tsv** contains exemplary input data. After running any
 
 Structure of the input file:
 
-| tweetid                    |  text  | urls |
-|----------------------------|:------:|------|
-| ...                        |  ...   | ...  |
-| ...                        |  ...   | ...  |
-| ...                        |  ...   | ...  |
-
+| tweetid            | text                                                                                                                                       | urls                                                         |
+|--------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------|
+| 714752339819757568 | In @sciencemagazine: Rare variant found that raises HDL cholesterol and increases risk of coronary heart disease: https://t.co/4xpL3KlGy9  | ['https://www.science.org/doi/full/10.1126/science.aad3517'] |
+| 361218917303193600 | Teach children to treat animals responsibly do not teach captivity! Join us http://t.co/UR15gQPatU #FreeAllCetacea via @FreeAllCetacea     | ['http://www.wdcs.org/']                                     |
+| 712710761240350720 | Violence is a leading cause of death for Americans 10-24 yrs old. @NICHD_NIH research on youth violence prevention https://t.co/9ZD58zGUhI | ['https://1.usa.gov/1q0MqOd/']                               |
 
 Example for **cat2_sciurl.py**:
 
 Structure of the output file after running **cat2_sciurl.py**:
 
-| tweetid                    |  text  | urls | sci_subdomain | has_sci_subdomain | sci_mag_domain | has_sci_mag_domain | sci_news_domain | has_sci_news_domain | is_cat2 |
-|----------------------------|:------:|------|---------------|-------------------|----------------|--------------------|-----------------|---------------------|---------|
-| ...                        |  ...   | ...  | ...           | ...               | ...            | ...                | ...             | ...                 | ...     |
-| ...                        |  ...   | ...  | ...           | ...               | ...            | ...                | ...             | ...                 | ...     |
-| ...                        |  ...   | ...  | ...           | ...               | ...            | ...                | ...             | ...                 | ...     |
+| tweetid            | text                                                                                                                                       | urls                                                         | sci_subdomain   | has_sci_subdomain | sci_mag_domain  | has_sci_mag_domain | sci_news_domain | has_sci_news_domain | is_cat2 |
+|--------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------|-----------------|-------------------|-----------------|--------------------|-----------------|---------------------|---------|
+| 714752339819757568 | In @sciencemagazine: Rare variant found that raises HDL cholesterol and increases risk of coronary heart disease: https://t.co/4xpL3KlGy9  | ['https://www.science.org/doi/full/10.1126/science.aad3517'] | www.science.org | True              | www.science.org | True               |                 | False               | True    |
+| 361218917303193600 | Teach children to treat animals responsibly do not teach captivity! Join us http://t.co/UR15gQPatU #FreeAllCetacea via @FreeAllCetacea     | ['http://www.wdcs.org/']                                     |                 | False             |                 | False              |                 | False               | False   |
+| 712710761240350720 | Violence is a leading cause of death for Americans 10-24 yrs old. @NICHD_NIH research on youth violence prevention https://t.co/9ZD58zGUhI | ['https://1.usa.gov/1q0MqOd/']                               |                 | False             |                 | False              |                 | False               | False   |
 
 
 # How to Use
