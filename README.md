@@ -77,25 +77,26 @@ Science-Relatedness, Scientific Online Discourse, Tweets, Claims, Heuristics
 
 
 ## Usecase
-The heuristics can be used to extract scientific online discourse from Twitter data (Tweets that are science-related). The extracted Tweets could be (1) analyzed or (2) used as input for subsequent methods like claim verification or reference disambiguation.
-
+A social scientist studying scientific online discourse on Twitter (Tweets that are science-related) over time. After extraction of such Tweets, they could be (1) analyzed or (2) used as input for subsequent methods like claim verification or reference disambiguation.
 
 ## Repo Structure
 This repository contains the following directories and files:
 
-1. **heuristics** the python script for classifying the science-relatedness of Tweets
-   1. **cat1_sciknowledge.py** code to run heuristics for category 1.1
-   2. **cat2_sciurl.py** code to run heuristics for category 1.2
-   3. **cat3_research.py** code to run heuristics for category 1.3
-   4. **news_outlets_domains.csv** domains and subdomains from major news outlets
-   6. **repo_subdomains.csv** domains and subdomains from open access repositories 
-   7. **sc_methods.txt** list of scientific methods from SAGE Social Science Thesaurus [Link](https://concepts.sagepub.com/vocabularies/social-science/en/page/?uri=https%3A%2F%2Fconcepts.sagepub.com%2Fsocial-science%2Fconcept%2Fconceptgroup%2Fmethods)
-   8. **science_mags_domains.csv** domains and subdomains from science magazines
-   9. **wiki_sci_terms.txt** list of scientific terms extracted from wikipedia glossaries
-2. **example_tweets.tsv** an examplary input dataset in tsv format (tab separated) 
-3. **example_tweets_cat1_heuristics.tsv** an examplary output dataset in tsv format (tab separated) after running cat1_sciknowledge.py
-4. **example_tweets_cat2_heuristics.tsv** an examplary output dataset in tsv format (tab separated) after running cat2_sciurl.py
-5. **example_tweets_cat3_heuristics.tsv** an examplary output dataset in tsv format (tab separated) after running cat3_research.py
+.<br/>
+├── heuristics                               # The Python script folder for classifying the science-relatedness of Tweets<br/>
+│   ├── cat1_sciknowledge.py                 # Code to run heuristics for category 1.1<br/>
+│   ├── cat2_sciurl.py                       # Code to run heuristics for category 1.2<br/>
+│   ├── cat3_research.py                     # Code to run heuristics for category 1.3<br/>
+│   ├── news_outlets_domains.csv             # Domains and subdomains from major news outlets<br/>
+│   ├── repo_subdomains.csv                  # Domains and subdomains from open access repositories<br/>
+│   ├── sc_methods.txt                       # List of scientific methods from SAGE Social Science Thesaurus [Link](https://concepts.sagepub.com/vocabularies/social-science/en/page/?uri=https%3A%2F%2Fconcepts.sagepub.com%2Fsocial-science%2Fconcept%2Fconceptgroup%2Fmethods)<br/>
+│   ├── science_mags_domains.csv             # Domains and subdomains from science magazines<br/>
+│   └── wiki_sci_terms.txt                   # List of scientific terms extracted from Wikipedia glossaries<br/>
+├── example_tweets.tsv                       # An exemplary input dataset in TSV format (tab-separated)<br/>
+├── example_tweets_cat1_heuristics.tsv       # An exemplary output dataset in TSV format (tab-separated) after running cat1_sciknowledge.py<br/>
+├── example_tweets_cat2_heuristics.tsv       # An exemplary output dataset in TSV format (tab-separated) after running cat2_sciurl.py<br/>
+└── example_tweets_cat3_heuristics.tsv       # An exemplary output dataset in TSV format (tab-separated) after running cat3_research.py<br/>
+
 
 ## Setup
 

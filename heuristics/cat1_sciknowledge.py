@@ -1,25 +1,15 @@
+import argparse
 import en_core_web_sm
 import re
-import sys
 import pandas as pd
 from nltk.tokenize import sent_tokenize, word_tokenize
 nlp = en_core_web_sm.load()
 
-# Predicates word list
-predicates = ['affect', 'affects',
-              'are a', 'associated with',
-              'cause', 'causes', 'correlated with',
-              'decrease', 'decreases', 'diminish', 'diminishes',
-              'enable', 'enables',
-              'facilitate', 'facilitates',
-              'higher than', 'hinder', 'hinders',
-              'increase', 'increases', 'increment','increments','inhibit', 'inhibits',
-              'lead to', 'leads to', 'lower', 'lower than', 'lowers',
-              'need less', 'need more', 'needs less', 'needs more',
-              'prevent', 'prevents', 'process of', 'promote', 'promotes',
-              'reason for', 'reason why',
-              'stop', 'stops', 'support', 'supports', 'treat', 'treats']
+# Load predicates
+with open('predicates.txt', 'r') as f:
+    predicates = [line.strip() for line in f]
 
+# Load scientific terms
 def load_scientific_terms():
     with open('wiki_sci_terms.txt', 'r') as f:
         wiki_sci_terms = [line.strip() for line in f]
@@ -43,43 +33,38 @@ def load_scientific_terms():
 
 scientific_terms = load_scientific_terms()
 
-# SCI-HEURISTICS
 
-# HEURISTIC 1: CONTAINS ARGUMENTATIVE RELATION
+# HEURISTIC 1: IS CLAIM (PATTERN-MATCHING: NOUN + PRED + (NOUN OR ADJ) where PRED = a predicate from the list of predicates)
+
+# Helper function: Check if a tweet sentence contains an argumentative relation using a list of known argumentative predicates.
 def contains_arg_relation(tweet_sentence):
+    """
+    Checks whether the given tweet sentence contains any argumentative predicate
+    from the 'predicates' list using a regex pattern.
+
+    Parameters:
+        tweet_sentence (str): The text of the tweet sentence.
+
+    Returns:
+        str: The first matched predicate if found, otherwise an empty string.
+    """
     for pred in predicates:
-        if re.match('.*\s('+pred+')\s.{2,}', tweet_sentence) is not None:
+        pattern = rf"\b{re.escape(pred)}\b\s+.{{2,}}"
+        if re.search(pattern, tweet_sentence):
             return pred
     return ""
 
 
-# HEURISTIC 2: CONTAINS SCIENTIFIC TERM
-def contains_scientific_term(tweet_sentence, one_gram_sciterm_only=True):
-    # Option 1: Check only for 1-gram sciterms in tweets
-    if one_gram_sciterm_only:
-        sciterms = []
-        tweet_tokens = word_tokenize(tweet_sentence)
-        for sciterm in scientific_terms:
-            if sciterm in tweet_tokens:
-                sciterms.append(sciterm)
-        if len(sciterms) > 0:
-            return True, sciterms
-        return False, []
-    # Option 2: Check for all n-gram sciterms in tweets
-    # WARNING: IMPERFECT, DO NOT USE OPTION 2 FOR NOW
-    # EXPLANATION = (sciterm="top"):no difference between a good positive match ("top .."->matches "top"+" ")
-    # and a bad positive match ("stop .."-> also matches "top"+" "
-    else:
-        sciterms = []
-        for sciterm in scientific_terms:
-            if (' '+sciterm+' ' in tweet_sentence) or (sciterm+' ' in tweet_sentence) or (' '+sciterm in tweet_sentence):
-                sciterms.append(sciterm)
-        if len(sciterms) > 0:
-            return True, sciterms
-        return False, []
-
-# HEURISTIC 3: IS CLAIM (PATTERN-MATCHING: NOUN + PRED + (NOUN OR ADJ) where PRED = a predicate from the list of predicates)
 def is_claim(tweet):
+    """
+    Checks whether the given tweet is a claim with a pattern NOUN + PRED + (NOUN OR ADJ)
+
+    Parameters:
+        tweet (str): The text of the tweet.
+
+    Returns:
+        tuple: (True, first sentence of the tweet in which a scientific claim was found), otherwise (False, "").
+    """
     tweet = tweet.lower()
     pred = contains_arg_relation(tweet)
     if pred != "":
@@ -99,7 +84,6 @@ def is_claim(tweet):
                 else:
                     pred_index = texts.index(pred)
 
-                #if (pred == "support" and poss[pred_index] != 'NOUN') or pred != "support":
                 tags_before = tags[:pred_index]
                 poss_before = poss[:pred_index]
                 ents_before = ents[:pred_index]
@@ -108,7 +92,6 @@ def is_claim(tweet):
                 poss_after = poss[pred_index+1:]
                 ents_after = ents[pred_index+1:]
 
-
                 # Looked for pattern = NOUN + PRED + (NOUN OR ADJ)
                 # Condition = what's before the predicate IS a noun AND IS NOT one of the following: personal pronoun, possessive pronoun, person including fictional
                 if 'PRP' not in tags_before and 'PRP$' not in tags_before and 'PERSON' not in ents_before and 'NOUN' in poss_before:
@@ -116,38 +99,77 @@ def is_claim(tweet):
                     if 'PRP' not in tags_after and 'PRP$' not in tags_after and 'PERSON' not in ents_after and ('NOUN' or 'ADJ' in poss_after):
                         if "?" in sent:
                             if " how " in sent or "when " in sent or "why " in sent:
-                                return True, 'claim_question', sent
+                                return True, sent
                             else:
-                                return True, 'question', sent
+                                return True, sent
                         else:
-                            return True, pred, sent
+                            return True, sent
 
-    return False, "", ""
+    return False, ""
 
 
-# COMPOUND HEURISTICS
+# HEURISTIC 2: CONTAINS SCIENTIFIC TERM (using scientific_terms list)
+def contains_scientific_term(tweet_sentence):
+    """
+    Determines whether a tweet sentence contains any scientific terms from the predefined 'scientific_terms' list.
+
+    Parameters:
+        tweet_sentence (str): The text of the tweet sentence.
+
+    Returns:
+        tuple: (True, [list of found scientific terms]) if any are found, otherwise (False, []).
+    """
+    found_sciterms = []
+    tweet_tokens = word_tokenize(tweet_sentence)
+    for sciterm in scientific_terms:
+        if sciterm in tweet_tokens:
+            found_sciterms.append(sciterm)
+    if len(found_sciterms) > 0:
+        return True, found_sciterms
+    else:
+        return False, []
+
+
+# Function to annotate Tweets with Cat1 heuristics
 def annotate_tweets(tweets):
+    """
+    Annotates a DataFrame of tweets with Category 1 (Cat1) heuristic features:
+    - is_claim: whether the tweet contains a claim (via `is_claim`)
+    - claim_sentence: the specific sentence identified as a claim
+    - has_sciterm: whether the tweet contains any scientific term
+    - sciterms: list of matched scientific terms
+    - is_cat1: True if both a claim and a scientific term are present
+
+    Parameters:
+        tweets (pd.DataFrame): DataFrame containing a 'text' column with tweet content.
+
+    Returns:
+        pd.DataFrame: Annotated DataFrame with additional heuristic columns.
+    """
     res = tweets['text'].apply(is_claim)
     res = list(map(list, zip(*res)))
     tweets['is_claim'] = res[0]
-    tweets['predicate'] = res[1]
-    tweets['claim_sentence'] = res[2]
+    tweets['claim_sentence'] = res[1]
 
-    res = tweets['text'].apply(lambda x: contains_scientific_term(x, one_gram_sciterm_only=True))
+    res = tweets['text'].apply(lambda x: contains_scientific_term(x))
     res = list(map(list, zip(*res)))
     tweets['has_sciterm'] = res[0]
     tweets['sciterms'] = res[1]
 
+    tweets["is_cat1"] = (tweets["is_claim"] & tweets["has_sciterm"])
 
     return tweets
 
-if __name__ == '__main__':
-    tweet_data_path = sys.argv[1]
-    tweet_data = pd.read_csv(tweet_data_path, sep='\t')
 
-    print('run heuristics')
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Load tweet data from a TSV file.")
+    parser.add_argument('tweet_data_path', type=str, help='Path to the input tweet data TSV file')
+
+    args = parser.parse_args()
+
+    tweet_data = pd.read_csv(args.tweet_data_path, sep='\t')
+
+    print('Run heuristics for category 1.1')
     tweet_data = annotate_tweets(tweet_data)
 
-    tweets["is_cat1"] = (tweets["is_claim"] & tweets["has_sciterm"])
-
-    tweet_data.to_csv(tweet_data_path.replace(".tsv", "_cat1_heuristics.tsv"), sep="\t", index=False)
+    tweet_data.to_csv(args.tweet_data_path.replace(".tsv", "_cat1_heuristics.tsv"), sep="\t", index=False)
