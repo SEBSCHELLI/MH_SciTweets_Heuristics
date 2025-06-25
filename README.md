@@ -1,7 +1,7 @@
 # SciTweets Heuristics - Heuristics of Science-Relatedness of Tweets
 
 ## Description
-This repository contains three scripts to classify the science-relatedness of Tweets with heuristics. The heuristics were developed as part of *"SciTweets - A Dataset and Annotation Framework for Detecting Scientific Online Discourse"* published at **CIKM2022**. The scripts include heuristics for the following three different forms of science-relatedness for Tweets (categories 1.1, 1.2, and 1.3):
+The method offers (a) an annotation framework and corresponding definitions for different forms of scientific relatedness of online discourse in Tweets, (b) an expert-annotated dataset of 1261 tweets obtained through our labeling framework reaching an average Fleiss Kappa  of 0.63, (c) a multi-label classifier trained on our data able to detect science-relatedness with 89% F1 and also able to detect distinct forms of scientific knowledge (claims, references). It provides foundation for developing and evaluating robust methods for analysing science as part of large-scale online discourse.
 
 ## Use Cases
 A social scientist studying scientific online discourse on Twitter (Tweets that are science-related) over time. After extraction of such Tweets, they could be (1) analyzed or (2) used as input for subsequent methods like claim verification or reference disambiguation.
@@ -63,6 +63,7 @@ where the _input_file_path_ is the path on your computer/server where the input 
 3. After the script is finished it will save the output file to the same location as the _input_file_path_ with "_cat1_heuristics" / "_cat2_heuristics" / "_cat3_heuristics" appended to the input file filename depending on which script was run.
 
 ## Technical Details
+This repository contains three scripts to classify the science-relatedness of Tweets with heuristics. The heuristics were developed as part of *"SciTweets - A Dataset and Annotation Framework for Detecting Scientific Online Discourse"* published at **CIKM2022**. The scripts include heuristics for the following three different forms of science-relatedness for Tweets (categories 1.1, 1.2, and 1.3):
 
 ![Image Alt Text](categories_science_relatedness.png)
 
