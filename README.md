@@ -1,7 +1,7 @@
 # SciTweets Heuristics - Heuristics of Science-Relatedness of Tweets
 
 ## Description
-This repository contains three scripts to classify the science-relatedness of Tweets with heuristics. The heuristics were developed as part of *"SciTweets - A Dataset and Annotation Framework for Detecting Scientific Online Discourse"* published at **CIKM2022**. The scripts include heuristics for the following three different forms of science-relatedness for Tweets (categories 1.1, 1.2, and 1.3):
+This method offers a computationally inexpensive way to extract scientific online discourse from a dataset of tweets / social media posts. It contains heuristics to identify three different forms of science-relatedness in tweets (categories 1.1, 1.2, and 1.3) (see definitions below). The heuristics were developed to sample data for the SciTweets dataset as part of *"SciTweets - A Dataset and Annotation Framework for Detecting Scientific Online Discourse"* published at **CIKM2022**.
 
 ## Use Cases
 A social scientist studying scientific online discourse on Twitter (Tweets that are science-related) over time. After extraction of such Tweets, they could be (1) analyzed or (2) used as input for subsequent methods like claim verification or reference disambiguation.
