@@ -4,9 +4,8 @@
 This method offers a computationally inexpensive way to extract scientific online discourse from a dataset of tweets / social media posts. It contains heuristics to identify three different forms of science-relatedness in tweets (categories 1.1, 1.2, and 1.3) (see definitions below). The heuristics were developed to sample data for the SciTweets dataset as part of *"SciTweets - A Dataset and Annotation Framework for Detecting Scientific Online Discourse"* published at **CIKM2022**.
 
 ## Use Cases
-Studying scientific online discourse on Twitter (Tweets that are science-related) over time requires the extracted tweets to be explored before using them for the subsequent analysis task. 
+Studying scientific online discourse on Twitter (Tweets that are science-related) over time to explore tweets before using them for the subsequent analysis task. 
 
-. After the extraction of such Tweets, they could be (1) analyzed or (2) used as input for subsequent methods like claim verification or reference disambiguation.
 
 ## Input Data
 The input data has to be a .tsv file (tab-separated) containing the input Tweets. The input file needs to have a _text_ column for the heuristics for categories 1.1 and 1.3, and a _urls_ column for the category 1.2 heuristics script. Sample input for the method is in file [data/example_tweets.tsv](data/example_tweets.tsv)
@@ -39,8 +38,8 @@ The method runs on a small virtual machine provided by cloud computing company (
 
 Run the following commands to set up the virtual environment and download resources. *The method works with Python version>=3.9*.
 
-`python -m pip install -r requirements.txt`
-`python -m spacy download en_core_web_sm`
+- `python -m pip install -r requirements.txt`
+- `python -m spacy download en_core_web_sm`
 
 ## How to Use
 Run the scripts for category 1.1
@@ -56,25 +55,17 @@ Run the scripts for category 1.3
 
 ![Image Alt Text](categories_science_relatedness.png)
 
-**Category 1 - Science-related**: Texts that fall under at least one of
-the following categories:
+**Category 1 - Science-related**: Texts that fall under at least one of the following categories:
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Category 1.1 - Scientific knowledge (scientifically verifiable claims)**: Does the text include a claim or a question that
-could be scientifically verified? 
+- **Category 1.1 - Scientific knowledge (scientifically verifiable claims):** Does the text include a claim or a question that could be scientifically verified? 
+- **Category 1.2 - Reference to scientific knowledge:** Does the text include at least one reference to scientific knowledge? References can either be direct, e.g., DOI, title of a paper, or indirect, e.g., a link to an article that includes a direct reference
+- **Category 1.3 - Related to scientific research in general:** Does the text mention a scientific research context (e.g., mention of a scientist, scientific research efforts, research findings)? 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Category 1.2 - Reference to scientific knowledge**: Does the text include at least one reference to scientific knowledge?
-References can either be direct, e.g., DOI, title of a paper, or indirect, e.g., a link to an article that includes a direct reference
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Category 1.3 - Related to scientific research in general**:
-Does the text mention a scientific research context (e.g., mention
-of a scientist, scientific research efforts, research findings)? 
-
-**Category 2 - Not science-related**: Texts that don’t fall under any of the 3 previous categories. 
+**Category 2 - Not science-related**: Texts that do not fall under any of the three subcategories of category 1, i.e., science-relatedness. 
 
 **Heuristics**
 
-**Heuristics for Category 1.1** 
-To find tweets for category 1.1, the final heuristic comprises two heuristics combined with a logical AND operator:
+**Heuristics for Category 1.1: **To find tweets for category 1.1, the final heuristic comprises two heuristics combined with a logical AND operator:
 1. Heuristic 1: pattern-matching for subject-predicate-object patterns (more specifically: noun-verb-noun and noun-verb-adjective patterns) where the predicate must come from a list of predefined predicates (e.g, « cause », « lead to », « help with ») that we extracted from different research works on claims [1-4].
 2. Heuristic 2: scientific term filter where we only keep tweets that contain at least one term from a predefined list of ~30k scientific terms that come from Wikipedia Glossaries, from which we hand-picked the categories that we deemed to be related to science (e.g, « medicine », « history », « biology »). 
 
@@ -124,10 +115,13 @@ To find tweets for category 1.3, four different heuristics are combined with a l
 4. Heuristic 4: includes tweets that mention research outcomes, i.e., that have a noun from a predefined list, e.g.,'publications', 'posters', 'reports', 'statistics', 'datasets', 'findings'
 
 ## References
-- [1] Pinto, J. M. G., Wawrzinek, J., & Balke, W. T. (2019, June). What Drives Research Efforts? Find Scientific Claims that Count!. In 2019 ACM/IEEE Joint Conference on Digital Libraries (JCDL) (pp. 217-226). IEEE.
-- [2] González Pinto, J. M., & Balke, W. T. (2018, September). Scientific claims characterization for claim-based analysis in digital libraries. In International Conference on Theory and Practice of Digital Libraries (pp. 257-269). Springer, Cham.
-- [3] Kilicoglu, H., Rosemblat, G., Fiszman, M., & Rindflesch, T. C. (2011). Constructing a semantic predication gold standard from the biomedical literature. BMC bioinformatics, 12(1), 1-17.
-- [4] Smeros, P., Castillo, C., & Aberer, K. (2021, October). SciClops: Detecting and Contextualizing Scientific Claims for Assisting Manual Fact-Checking. In Proceedings of the 30th ACM International Conference on Information & Knowledge Management (pp. 1692-1702).
+[1] Pinto, J. M. G., Wawrzinek, J., & Balke, W. T. (2019, June). What Drives Research Efforts? Find Scientific Claims that Count!. In 2019 ACM/IEEE Joint Conference on Digital Libraries (JCDL) (pp. 217-226). IEEE.
+
+[2] González Pinto, J. M., & Balke, W. T. (2018, September). Scientific claims characterization for claim-based analysis in digital libraries. In International Conference on Theory and Practice of Digital Libraries (pp. 257-269). Springer, Cham.
+
+[3] Kilicoglu, H., Rosemblat, G., Fiszman, M., & Rindflesch, T. C. (2011). Constructing a semantic predication gold standard from the biomedical literature. BMC bioinformatics, 12(1), 1-17.
+
+[4] Smeros, P., Castillo, C., & Aberer, K. (2021, October). SciClops: Detecting and Contextualizing Scientific Claims for Assisting Manual Fact-Checking. In Proceedings of the 30th ACM International Conference on Information & Knowledge Management (pp. 1692-1702).
 
 ## Contact Details
 For questions or feedback, contact <sebastian.schellhammer@gesis.org>
