@@ -23,7 +23,7 @@ Sample input for the method is in file [data/example_tweets.tsv](data/example_tw
 ## Output Data
 The extracted heuristics are written into the files [data/example_tweets_cat1_heuristics.tsv](data/example_tweets_cat1_heuristics.tsv), [data/example_tweets_cat2_heuristics.tsv](data/example_tweets_cat2_heuristics.tsv), and [data/example_tweets_cat3_heuristics.tsv](data/example_tweets_cat3_heuristics.tsv). 
 
-The [data/example_tweets_cat2_heuristics.tsv](data/example_tweets_cat2_heuristics.tsv) file: 
+As an example, [data/example_tweets_cat2_heuristics.tsv](data/example_tweets_cat2_heuristics.tsv) file is shown: 
 
 
 | tweetid            | text                                                                                                                                       | urls                                                         | sci_subdomain   | has_sci_subdomain | sci_mag_domain  | has_sci_mag_domain | sci_news_domain | has_sci_news_domain | is_cat2 |
