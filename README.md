@@ -44,15 +44,19 @@ Run the following commands to set up the virtual environment and download resour
 - `python -m spacy download en_core_web_sm`
 
 ## How to Use
-Run the scripts for category 1.1
+
 `cd heuristics`
+
+Run the scripts for category 1.1
 
 `python3 cat1_sciknowledge.py ../data/example_tweets.tsv`
 
 Run the scripts for category 1.2
+
 `python3 cat2_sciurl.py ../data/example_tweets.tsv`
 
 Run the scripts for category 1.3
+
 `python3 cat3_research.py ../data/example_tweets.tsv`
 
 ## Technical Details
