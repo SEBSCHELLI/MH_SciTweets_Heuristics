@@ -1,14 +1,15 @@
 # SciTweets Heuristics - Heuristics of Science-Relatedness of Tweets
 
 ## Description
-This method offers a computationally inexpensive way to extract scientific online discourse from a dataset of tweets / social media posts. It contains heuristics to identify three different forms of science-relatedness in tweets (categories 1.1, 1.2, and 1.3) (see definitions below). The heuristics were developed to sample data for the SciTweets dataset as part of *"SciTweets - A Dataset and Annotation Framework for Detecting Scientific Online Discourse"* published at **CIKM2022**.
+
+This method offers a computationally inexpensive way to extract scientific online discourse from a dataset of social media posts. It contains heuristics to identify three different forms of science-relatedness in tweets i.e., 1) if it has a claim, if the claims is scientific and the sentence having the claim 2) whether the claim about a scientific magazine or news article and 3) the scientist or research method mentioned in the claim. The heuristics are developed for the SciTweets dataset as part of the publication *"SciTweets - A Dataset and Annotation Framework for Detecting Scientific Online Discourse"* published at **CIKM2022**.
 
 ## Use Cases
+
 Study online science-related discourse to explore if the social media post has scientific claims, science-related terms, belongs to scientific magazines or news articles, and has scientists or research method mentions. 
 
 
 ## Input Data
-The input data has to be a .tsv file (tab-separated) containing the input Tweets. The input file shall have a _text_ column for the heuristics for categories 1.1 and 1.3, and a _urls_ column for the category 1.2 heuristics script. 
 
 Sample input for the method is in file [data/example_tweets.tsv](data/example_tweets.tsv)
 
@@ -18,7 +19,9 @@ Sample input for the method is in file [data/example_tweets.tsv](data/example_tw
 | 361218917303193600 | Teach children to treat animals responsibly do not teach captivity! Join us http://t.co/UR15gQPatU #FreeAllCetacea via @FreeAllCetacea     | ['http://www.wdcs.org/']                                     |
 | 712710761240350720 | Violence is a leading cause of death for Americans 10-24 yrs old. @NICHD_NIH research on youth violence prevention https://t.co/9ZD58zGUhI | ['https://1.usa.gov/1q0MqOd/']                               |
 
-*Any other column is moved as is to the output file*
+*Please note that in order for the tweets/social media posts to be annotated with the heuristics of categories 1.1 and 1.3, the dataset must include a text column that allows the application of the corresponding heuristics. While, to be annotated with the heuristics of the category 1.2, the dataset must contain the urls column for the url related heuristics.*
+
+*The columns from the input file are moved as is to the output files.*
 
 ## Output Data
 The extracted heuristics are written into the files [data/example_tweets_cat1_heuristics.tsv](data/example_tweets_cat1_heuristics.tsv), [data/example_tweets_cat2_heuristics.tsv](data/example_tweets_cat2_heuristics.tsv), and [data/example_tweets_cat3_heuristics.tsv](data/example_tweets_cat3_heuristics.tsv). 
