@@ -5,16 +5,19 @@ import pandas as pd
 from nltk.tokenize import sent_tokenize, word_tokenize
 nlp = en_core_web_sm.load()
 
+import nltk
+nltk.download('punkt')
+
 # Load predicates
-with open('predicates.txt', 'r') as f:
+with open('heuristics/predicates.txt', 'r') as f:
     predicates = [line.strip() for line in f]
 
 # Load scientific terms
 def load_scientific_terms():
-    with open('wiki_sci_terms.txt', 'r') as f:
+    with open('heuristics/wiki_sci_terms.txt', 'r') as f:
         wiki_sci_terms = [line.strip() for line in f]
 
-    with open('sc_methods.txt', 'r') as f:
+    with open('heuristics/sc_methods.txt', 'r') as f:
         sc_methods_terms = [line.strip() for line in f]
 
     scientific_terms = wiki_sci_terms + sc_methods_terms
