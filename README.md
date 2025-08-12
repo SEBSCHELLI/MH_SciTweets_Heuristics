@@ -58,7 +58,7 @@ Run the following commands to set up the virtual environment and download resour
 
 **Run the scripts for category 1.3**
 
-`python3 cat3_research.py ../data/example_tweets.tsv`
+`python3 heuristics/cat3_research.py data/example_tweets.tsv`
 
 ## Technical Details
 
