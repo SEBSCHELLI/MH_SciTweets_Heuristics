@@ -52,7 +52,7 @@ Run the following commands to set up the virtual environment and download resour
 
 Run the scripts for category 1.1
 
-`python3 cat1_sciknowledge.py ../data/example_tweets.tsv`
+`python3 heuristics/cat1_sciknowledge.py data/example_tweets.tsv`
 
 Run the scripts for category 1.2
 
