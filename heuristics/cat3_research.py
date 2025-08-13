@@ -6,7 +6,7 @@ nlp = en_core_web_sm.load()
 
 
 # Load lists of keywords
-with open('sc_methods.txt') as f:
+with open('heuristics/sc_methods.txt') as f:
     methods = f.read().splitlines()
 exclude_methods = ['life story', 'sample size', 'ideal type', 'life experiences', 'data privacy', 'role playing', 'data quality', 'survey results', 'research grants', 'false negative']
 methods_kws = [method for method in methods if method not in exclude_methods]

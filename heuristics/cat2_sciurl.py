@@ -4,9 +4,9 @@ import tldextract
 import pandas as pd
 
 # Load lists of relevant subdomains
-repo_subdomains = pd.read_csv('repo_subdomains.csv')['domain'].values
-sci_mags_domains = pd.read_csv('science_mags_domains.csv')['domain'].values
-sci_news_domains = pd.read_csv('news_outlets_domains.csv')['domain'].values
+repo_subdomains = pd.read_csv('heuristics/repo_subdomains.csv')['domain'].values
+sci_mags_domains = pd.read_csv('heuristics/science_mags_domains.csv')['domain'].values
+sci_news_domains = pd.read_csv('heuristics/news_outlets_domains.csv')['domain'].values
 
 
 def url2domain(url):
