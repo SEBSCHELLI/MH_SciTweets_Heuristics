@@ -62,7 +62,7 @@ Run the following commands to set up the virtual environment and download resour
 
 ## Technical Details
 
-![Image Alt Text](categories_science_relatedness.png)
+![](categories_science_relatedness.png)
 
 **Category 1 - Science-related**: Texts that fall under at least one of the following categories:
 
