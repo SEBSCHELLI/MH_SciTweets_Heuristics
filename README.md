@@ -62,9 +62,16 @@ python -m spacy download en_core_web_sm
 Apply the heuristics for each category to the [example input data](data/example_tweets.tsv), then display the result:
 
 ```{bash}
-python3 src/apply_cat1_claim_question_heuristics.py data/example_tweets.tsv # writes to data/example_tweets_cat1.tsv
-python3 src/apply_cat2_reference_heuristics.py data/example_tweets_cat1.tsv # writes to data/example_tweets_cat1_cat2.tsv
-python3 src/apply_cat3_research_context_heuristics.py data/example_tweets_cat1_cat2.tsv # writes to data/example_tweets_cat1_cat2_cat3.tsv
+# Apply category 1 heuristics and write to data/example_tweets_cat1.tsv
+python3 src/apply_cat1_claim_question_heuristics.py data/example_tweets.tsv
+
+# Apply category 2 heuristics and write to data/example_tweets_cat1_cat2.tsv
+python3 src/apply_cat2_reference_heuristics.py data/example_tweets_cat1.tsv
+
+# Apply category 3 heuristics and write to data/example_tweets_cat1_cat2_cat3.tsv
+python3 src/apply_cat3_research_context_heuristics.py data/example_tweets_cat1_cat2.tsv
+
+# Display result
 cat data/example_tweets_cat1_cat2_cat3.tsv
 ```
 
