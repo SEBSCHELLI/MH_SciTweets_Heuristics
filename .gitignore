@@ -1,3 +1,6 @@
+/data/example_tweets_cat1.tsv
+/data/example_tweets_cat1_cat2.tsv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

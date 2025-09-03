@@ -1,13 +1,20 @@
-# SciTweets Heuristics - Heuristics of Science-Relatedness of Tweets
+# SciTweets Detection Heuristics
 
 ## Description
 
-This method offers a computationally inexpensive way to extract scientific online discourse from a dataset of social media posts. It contains heuristics to identify three different forms of science-relatedness in tweets i.e., 1) if it has a claim, if the claims is scientific and the sentence having the claim 2) whether the claim about a scientific magazine or news article and 3) the scientist or research method mentioned in the claim. The heuristics are developed for the SciTweets dataset as part of the publication *"SciTweets - A Dataset and Annotation Framework for Detecting Scientific Online Discourse"* published at **CIKM2022**.
+This method offers a computationally inexpensive and fully transparent way to detect scientific online discourse from a dataset of social media posts. It was originally created to analyse tweets, but can be used for all kinds of social media posts. It applies quick word-based heuristics (see [Technical Details](#technical-details)) to identify three different forms of science-relatedness in posts:
+
+- Category 1: Whether the post contains a claim or a question that could be scientifically verified
+- Category 2: Whether the post references scientific knowledge
+- Category 3: Whether the post mentions a scientific research context
+
+![The identified categories](categories_science_relatedness.png)
 
 ## Use Cases
 
-Study online science-related discourse to explore if the social media post has scientific claims, science-related terms, belongs to scientific magazines or news articles, and has scientists or research method mentions. 
+- To quickly and transparently identify social media posts in a large dataset that could be part of a scientific online discourse. One can filter the large dataset for posts identified as belonging to one of the three categories.
 
+  Hafid, S., Schellhammer, S., Bringay, S., Todorov, K., & Dietze, S. (2022, October). SciTweets-a dataset and annotation framework for detecting scientific online discourse. In *Proceedings of the 31st ACM International Conference on Information & Knowledge Management* (pp. 3988-3992).
 
 ## Input Data
 
@@ -35,34 +42,34 @@ As an example, [data/example_tweets_cat2_heuristics.tsv](data/example_tweets_cat
 | 361218917303193600 | Teach children to treat animals responsibly do not teach captivity! Join us http://t.co/UR15gQPatU #FreeAllCetacea via @FreeAllCetacea     | ['http://www.wdcs.org/']                                     |                 | False             |                 | False              |                 | False               | False   |
 | 712710761240350720 | Violence is a leading cause of death for Americans 10-24 yrs old. @NICHD_NIH research on youth violence prevention https://t.co/9ZD58zGUhI | ['https://1.usa.gov/1q0MqOd/']                               |                 | False             |                 | False              |                 | False               | False   |
 
-
 ## Hardware Requirements
-The method runs on a small virtual machine provided by cloud computing company (2 x86 CPU cores, 4 GB RAM, 40GB HDD).
+
+This method has low hardware requirements. For example, it runs on a small machine with 1 x86 CPU core, 2 GB RAM, and 2 GB HDD. This method can run out of memory if your dataset is too large to fit into main memory (RAM).
 
 ## Environment Setup
 
-Run the following commands to set up the virtual environment and download resources. *The method works with Python version>=3.9*.
+This method requires at least Python version 3.9. To avoid problems with your system's Python installation, create and activate a [virtual environment](https://docs.python.org/3/library/venv.html).
 
-- `python -m pip install -r requirements.txt`
-- `python -m spacy download en_core_web_sm`
+Then install all requirements using:
+
+```{bash}
+pip install -r requirements.txt
+python -m spacy download en_core_web_sm
+```
 
 ## How to Use
 
-**Run the scripts for category 1.1**
+Apply the heuristics for each category to the [example input data](data/example_tweets.tsv), then display the result:
 
-`python3 heuristics/cat1_sciknowledge.py data/example_tweets.tsv`
-
-**Run the scripts for category 1.2**
-
-`python3 heuristics/cat2_sciurl.py data/example_tweets.tsv`
-
-**Run the scripts for category 1.3**
-
-`python3 heuristics/cat3_research.py data/example_tweets.tsv`
+```{bash}
+python3 src/apply_cat1_claim_question_heuristics.py data/example_tweets.tsv # writes to data/example_tweets_cat1.tsv
+python3 src/apply_cat2_reference_heuristics.py data/example_tweets_cat1.tsv # writes to data/example_tweets_cat1_cat2.tsv
+python3 src/apply_cat3_research_context_heuristics.py data/example_tweets_cat1_cat2.tsv # writes to data/example_tweets_cat1_cat2_cat3.tsv
+cat data/example_tweets_cat1_cat2_cat3.tsv
+```
 
 ## Technical Details
 
-![Image Alt Text](categories_science_relatedness.png)
 
 **Category 1 - Science-related**: Texts that fall under at least one of the following categories:
 
