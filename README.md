@@ -4,9 +4,9 @@
 
 This method offers a computationally inexpensive and fully transparent way to identify scientific online discourse from a dataset of social media posts. It was originally developed for analyzing tweets, but can be used for all types of social media posts. It applies word-based heuristics (see [Technical Details](#technical-details)) to identify three different forms of scientific relevance in posts:
 
-- Category 1: The post contains a claim or question that can be scientifically verified
-- Category 2: The post references scientific findings
-- Category 3: The post mentions a scientific research context
+- Category 1: The post contains a claim or question that can be scientifically verified.
+- Category 2: The post references scientific findings (via a link).
+- Category 3: The post mentions a scientific research context (e.g., mention of a scientist, scientific research efforts, research findings).
 
 The strength of the method lies in its transparency, as it is based exclusively on rules that are understandable to humans.
 
@@ -79,61 +79,35 @@ cat data/example_tweets_cat1_cat2_cat3.tsv
 
 This method employs a set of simple human-made rules ("heuristics") to identify whether a social media post falls into one of three categories related to scientific online discourse. The heuristics for each category are explained below:
 
-- Category 1 Heuristic: The post contains a claim or question that can be scientifically verified *if*
-    - it contains a verb that from a [list of verbs](src/lists/predicates.txt) that we extracted from four research works on claims [1-4], and which is neither preceded nor followed by a personal pronoun, possessive pronoun noun or adjective in the same sentence, but is preceded by a noun and followed by a noun or by an adjective.
+- Category 1: The post contains a claim or question that can be scientifically verified ([source code](src/apply_cat1_claim_question_heuristics.py)).
 
-- Category 2: The post references scientific findings
-- Category 3: The post mentions a scientific research context
+  - *If* the post contains a phrase with a verb from our [list of verbs that indicate a scientific inquiry](src/lists/predicates.txt) (output column `is_claim`). The list was extracted from four research works on claims [1-4]. Moreover, in the sentence (output column `claim_sentence`), the verb has to be preceded by a noun and followed by a noun or by an adjective, and there has to be no personal pronoun, possessive pronoun or person entity in the same sentence (as these would indicate a specific person doing something, not a generic case).
+  - *And* the post contains at least one term from a [list of ~30k scientific terms](src/lists/wiki_sci_terms.txt) from Wikipedia Glossaries, from which we hand-picked the categories that we deemed to be related to science (e.g, "medicine," "history," "biology"), or a [list of ~1.5k scientific methods](src/lists/sc_methods.txt), not counting terms that are [slang words](src/lists/text_speak_words.txt) or that we identified as false scientific terms when looking at the [most frequent terms](src/lists/false_scientific_words.txt) in the dataset. Identified terms are in the output column `sciterms`, with `has_sciterm` being `True` if it has at least one.
 
-    **Heuristics for Category 1.1:** To find tweets for category 1.1, the final heuristic comprises two heuristics combined with a logical AND operator:
-    - Heuristic 1: pattern-matching for subject-predicate-object patterns (more specifically: noun-verb-noun and noun-verb-adjective patterns) where the predicate must come from a list of predefined predicates (e.g, « cause », « lead to », « help with ») that we extracted from different research works on claims [1-4].
-    - Heuristic 2: scientific term filter where we only keep tweets that contain at least one term from a predefined list of ~30k scientific terms that come from Wikipedia Glossaries, from which we hand-picked the categories that we deemed to be related to science (e.g, « medicine », « history », « biology »).
+- Category 2: The post references scientific findings (via a link; [source code](src/apply_cat2_reference_heuristics.py)).
 
-- **Category 1.2 - Reference to scientific knowledge:** Does the text include at least one reference to scientific knowledge? References can either be direct, e.g., DOI, title of a paper, or indirect, e.g., a link to an article that includes a direct reference
+  - *If* the post contains a URL with a domain or subdomain of a [scientific repository](src/lists/repo_subdomains.txt) (17463 URLs, see [List of Repositories](#list-of-repositories); output columns `has_sci_subdomain` (if any match) and `sci_subdomain` (first match)).
+  - *Or* the post contains a URL with a domain or subdomain of a [scientific magazine](src/lists/science_mags_domains.txt) (14 magazines, manually curated; output columns `has_sci_mag_domain` (if any match) and `sci_mag_domain` (first match)).
+  - *Or* the post contains a URL with a domain or subdomain of a [scientific news outlets](src/lists/news_outlets_domains.txt) and `/science` (23 URLs, manually curated from major English language newspaper outlets with a dedicated science section; output columns `has_sci_news_domain` (if any match) and `sci_news_domain` (first match)).
 
-    **Heuristics for Category 1.2:** To find tweets for category 1.2, the heuristic checks whether a tweet contains a URL with a subdomain that is included in a
-predefined list of 17,500 scientific domains and subdomains from open access repositories, newspaper science sections, and science magazines (e.g., “link.springer.com“, “sciencedaily.com“).
+- Category 3: The post mentions a scientific research context (e.g., mention of a scientist, scientific research efforts, research findings; [source code](src/apply_cat3_research_context_heuristics.py)).
 
-    Number of scientific domains and subdomains per type:
+  - *If* the post contains a noun or proper noun from a [list of research or science phrases](/src/lists/science_research_in_general_kws.txt) (output column `mentions_science_research_in_general` contains the first noun found, if any).
+  - *Or* the post contains a noun or proper noun from a [list of scientists](/src/lists/scientists_kws.txt) (output column `mentions_scientist` contains the first noun found, if any).
+  - *Or* the post contains a noun or proper noun from a [list of scientific publication types](/src/lists/publications_kws.txt) (output column `mentions_publications` contains the first noun found, if any).
+  - *Or* the post contains a term from a [list of social science research methods](/src/lists/sc_methods.txt), which we collected from the [SAGE Social Science Thesaurus](https://concepts.sagepub.com/vocabularies/social-science/en/page/?uri=https%3A%2F%2Fconcepts.sagepub.com%2Fsocial-science%2Fconcept%2Fconceptgroup%2Fmethods) (output column `mentions_research_method` contains the first term found, if any).
 
-    | Type                       | Number of domains and subdomains |
-    |----------------------------|:--------------------------------:|
-    | Open Access Repositories   |              17,463              |
-    | Newspaper Science Sections |                23                |
-    | Science Magazines          |                14                |
-    | Total                      |              17,500              |
+### List of Repositories
 
-    *Open Access Repositories*
+The list of 17,463 subdomains is collected as follows:
 
-    The list of 17,463 subdomains is collected as follows:
-    - All full-text links included in the public CrossRef Snapshot from January 2021 ([Link](https://academictorrents.com/details/e4287cb7619999709f6e9db5c359dda17e93d515)) were extracted
-    - Using the CrossRef API, we extracted the full-text links that were registered after January 2021
-    - All extracted links were annotated with their subdomain using the Python library [tldextract](https://github.com/john-kurkowski/tldextract)
-    - The frequency for every subdomain was computed  
-    - We excluded subdomains with a frequency lower than 50
-    - We excluded 38 subdomains that are not scientific (e.g., "youtube.com", "yahoo.com")
-    - We added 46 subdomains from a manually curated list (e.g., "semanticscholar.org", "www.biorxiv.org")
-
-    To filter tweets that refer to Open Access Repositories, the tweets must contain a URL with a subdomain from this list. 
-
-    *Newspaper Science Sections*
-
-    The list of 23 Newspaper Science Sections is manually curated and contains domains from major newspaper outlets in the English language that have a dedicated science section.
-    To filter tweets that refer to Newspaper Science Sections, the tweets must contain a URL with a subdomain from this list **AND** include "/science".
-
-    *Science Magazines*
-
-    The list of 14 Science Magazines domains and subdomains is manually curated.
-    To filter tweets that refer to Science Magazines, the tweets must contain a URL with a subdomain from this list.
-
-
-- **Category 1.3 - Related to scientific research in general:** Does the text mention a scientific research context (e.g., mention of a scientist, scientific research efforts, research findings)?
-
-  **Heuristics for Category 1.3:** To find tweets for category 1.3, four different heuristics are combined with a logical OR operator:
-  - Heuristic 1: includes tweets that mention scientists, i.e., that have a noun from a predefined list, e.g., "research team", "research group", "scientist", "researcher", "psychologist", "biologist", "economist"
-  - Heuristic 2: includes tweets that mention research, i.e., that have a noun from a predefined list, e.g., 'research on', 'research in', 'research for', 'research from', 'science of', 'science to', 'science', 'sciences of'
-  - Heuristic 3: tweets that mention a research method, i.e., that have a word from a predefined list of social science methods, collected from SAGE Social Science Thesaurus (see sc_methods.txt) [Link](https://concepts.sagepub.com/vocabularies/social-science/en/page/?uri=https%3A%2F%2Fconcepts.sagepub.com%2Fsocial-science%2Fconcept%2Fconceptgroup%2Fmethods)
-  - Heuristic 4: includes tweets that mention research outcomes, i.e., that have a noun from a predefined list, e.g.,'publications', 'posters', 'reports', 'statistics', 'datasets', 'findings'
+- All full-text links included in the public [CrossRef Snapshot from January 2021](https://academictorrents.com/details/e4287cb7619999709f6e9db5c359dda17e93d515) were extracted
+- Using the CrossRef API, we extracted the full-text links that were registered after January 2021
+- All extracted links were annotated with their subdomain using the Python library [tldextract](https://github.com/john-kurkowski/tldextract)
+- The frequency for every subdomain was computed  
+- We excluded subdomains with a frequency lower than 50
+- We excluded 38 subdomains that are not scientific (e.g., "youtube.com", "yahoo.com")
+- We added 46 subdomains from a manually curated list (e.g., "semanticscholar.org", "www.biorxiv.org")
 
 ## References
 
