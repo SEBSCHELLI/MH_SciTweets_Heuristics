@@ -77,7 +77,7 @@ cat data/example_tweets_cat1_cat2_cat3.tsv
 
 ## Technical Details
 
-This method employs a set of simple human-made rules ("heuristics") to identify whether a social media post falls into one of three categories related to scientific online discourse. The heuristics for each category are explained below:
+This method employs a set of simple human-made rules ("heuristics") to identify whether a social media post falls into one of three categories related to scientific online discourse. The heuristics for each category are:
 
 - Category 1: The post contains a claim or question that can be scientifically verified ([source code](src/apply_cat1_claim_question_heuristics.py)).
 
