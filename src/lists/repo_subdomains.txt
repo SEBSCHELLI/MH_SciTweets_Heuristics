@@ -1,4 +1,3 @@
-domain
 dx.doi.org
 api.elsevier.com
 link.springer.com

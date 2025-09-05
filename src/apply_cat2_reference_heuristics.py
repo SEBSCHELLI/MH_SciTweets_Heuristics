@@ -2,11 +2,17 @@ import argparse
 import ast
 import tldextract
 import pandas as pd
+import os
 
+def load_list(filename):
+    lists_directory = os.path.join(os.path.dirname(__file__), 'lists')
+    with open(os.path.join(lists_directory, filename), 'r') as f:
+        return [line.strip() for line in f]
+    
 # Load lists of relevant subdomains
-repo_subdomains = pd.read_csv('heuristics/repo_subdomains.csv')['domain'].values
-sci_mags_domains = pd.read_csv('heuristics/science_mags_domains.csv')['domain'].values
-sci_news_domains = pd.read_csv('heuristics/news_outlets_domains.csv')['domain'].values
+repo_subdomains = load_list('repo_subdomains.txt')
+sci_mags_domains = load_list('science_mags_domains.txt')
+sci_news_domains = load_list('news_outlets_domains.txt')
 
 
 def url2domain(url):
@@ -220,17 +226,17 @@ def annotate_tweets(tweets):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Load tweet data from a TSV file.")
-    parser.add_argument('tweet_data_path', type=str, help='Path to the input tweet data TSV file')
+    parser = argparse.ArgumentParser(description="Load data from a TSV file.")
+    parser.add_argument('data_path', type=str, help='Path to the input data TSV file')
 
     args = parser.parse_args()
 
-    tweet_data = pd.read_csv(args.tweet_data_path, sep='\t')
+    data = pd.read_csv(args.data_path, sep='\t')
 
     print('Prepare Tweets: Extract URL domains')
-    tweet_data = prepare_urls(tweet_data)
+    data = prepare_urls(data)
 
     print('Run heuristics for category 1.2')
-    tweet_data = annotate_tweets(tweet_data)
+    data = annotate_tweets(data)
 
-    tweet_data.to_csv(args.tweet_data_path.replace(".tsv", "_cat2_heuristics.tsv"), sep="\t", index=False)
+    data.to_csv(args.data_path.replace(".tsv", "_cat2.tsv"), sep="\t", index=False)
