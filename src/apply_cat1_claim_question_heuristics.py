@@ -90,13 +90,7 @@ def is_claim(tweet):
                 if 'PRP' not in tags_before and 'PRP$' not in tags_before and 'PERSON' not in ents_before and 'NOUN' in poss_before:
                     # Same condition for what's after the predicate
                     if 'PRP' not in tags_after and 'PRP$' not in tags_after and 'PERSON' not in ents_after and ('NOUN' or 'ADJ' in poss_after):
-                        if "?" in sent:
-                            if " how " in sent or "when " in sent or "why " in sent:
-                                return True, sent
-                            else:
-                                return True, sent
-                        else:
-                            return True, sent
+                        return True, sent
 
     return False, ""
 
