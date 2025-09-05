@@ -82,7 +82,7 @@ This method employs a set of simple human-made rules ("heuristics") to identify 
 - Category 1: The post contains a claim or question that can be scientifically verified ([source code](src/apply_cat1_claim_question_heuristics.py)).
 
   - *If* the post contains a phrase with a verb from our [list of verbs that indicate a scientific inquiry](src/lists/predicates.txt) (output column `is_claim`). The list was extracted from four research works on claims [1-4]. Moreover, in the sentence (output column `claim_sentence`), the verb has to be preceded by a noun and followed by a noun or by an adjective, and there has to be no personal pronoun, possessive pronoun or person entity in the same sentence (as these would indicate a specific person doing something, not a generic case).
-  - *And* the post contains at least one term from a [list of ~30k scientific terms](src/lists/wiki_sci_terms.txt) from Wikipedia Glossaries, from which we hand-picked the categories that we deemed to be related to science (e.g, "medicine," "history," "biology"), or a [list of ~1.5k scientific methods](src/lists/sc_methods.txt), not counting terms that are [slang words](src/lists/text_speak_words.txt) or that we identified as false scientific terms when looking at the [most frequent terms](src/lists/false_scientific_words.txt) in the dataset. Identified terms are in the output column `sciterms`, with `has_sciterm` being `True` if it has at least one.
+  - *And* the post contains at least one term from a [list of ~30k scientific terms](src/lists/wiki_sci_terms.txt) from Wikipedia Glossaries, from which we hand-picked the categories that we deemed to be related to science (e.g, "medicine," "history," "biology"), or a [list of ~1.5k scientific methods](src/lists/sc_methods.txt) (see [List of Social Science Research Methods](#list-of-social-science-research-methods)), not counting terms that are [slang words](src/lists/text_speak_words.txt) or that we identified as false scientific terms when looking at the [most frequent terms](src/lists/false_scientific_words.txt) in the dataset. Identified terms are in the output column `sciterms`, with `has_sciterm` being `True` if it has at least one.
 
 - Category 2: The post references scientific findings (via a link; [source code](src/apply_cat2_reference_heuristics.py)).
 
@@ -92,14 +92,18 @@ This method employs a set of simple human-made rules ("heuristics") to identify 
 
 - Category 3: The post mentions a scientific research context (e.g., mention of a scientist, scientific research efforts, research findings; [source code](src/apply_cat3_research_context_heuristics.py)).
 
-  - *If* the post contains a noun or proper noun from a [list of research or science phrases](/src/lists/science_research_in_general_kws.txt) (output column `mentions_science_research_in_general` contains the first noun found, if any).
-  - *Or* the post contains a noun or proper noun from a [list of scientists](/src/lists/scientists_kws.txt) (output column `mentions_scientist` contains the first noun found, if any).
-  - *Or* the post contains a noun or proper noun from a [list of scientific publication types](/src/lists/publications_kws.txt) (output column `mentions_publications` contains the first noun found, if any).
-  - *Or* the post contains a term from a [list of social science research methods](/src/lists/sc_methods.txt), which we collected from the [SAGE Social Science Thesaurus](https://concepts.sagepub.com/vocabularies/social-science/en/page/?uri=https%3A%2F%2Fconcepts.sagepub.com%2Fsocial-science%2Fconcept%2Fconceptgroup%2Fmethods) (output column `mentions_research_method` contains the first term found, if any).
+  - *If* the post contains a noun or proper noun from a [list of research or science phrases](/src/lists/science_research_in_general_kws.txt) (15 terms, manually curated, output column `mentions_science_research_in_general` contains the first noun found, if any).
+  - *Or* the post contains a noun or proper noun from a [list of scientists](/src/lists/scientists_kws.txt) (12 terms, manually curated, output column `mentions_scientist` contains the first noun found, if any).
+  - *Or* the post contains a noun or proper noun from a [list of scientific publication types](/src/lists/publications_kws.txt) (10 terms, manually curated, output column `mentions_publications` contains the first noun found, if any).
+  - *Or* the post contains a term from a [list of social science research methods](/src/lists/sc_methods.txt) (1476 methods, see [List of Social Science Research Methods](#list-of-social-science-research-methods)) with at least two words (output column `mentions_research_method` contains the first term found, if any).
+
+### List of Social Science Research Methods
+
+The [list of 1,476 research methods](src/lists/sc_methods.txt) is collected from the [SAGE Social Science Thesaurus](https://concepts.sagepub.com/vocabularies/social-science/en/page/?uri=https%3A%2F%2Fconcepts.sagepub.com%2Fsocial-science%2Fconcept%2Fconceptgroup%2Fmethods).
 
 ### List of Repositories
 
-The list of 17,463 subdomains is collected as follows:
+The [list of 17,463 subdomains](src/lists/repo_subdomains.txt) is collected as follows:
 
 - All full-text links included in the public [CrossRef Snapshot from January 2021](https://academictorrents.com/details/e4287cb7619999709f6e9db5c359dda17e93d515) were extracted
 - Using the CrossRef API, we extracted the full-text links that were registered after January 2021
