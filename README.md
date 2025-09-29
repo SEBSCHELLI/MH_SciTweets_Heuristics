@@ -52,7 +52,7 @@ This method requires at least Python version 3.9. To avoid problems with your sy
 
 Then install all requirements using:
 
-```{bash}
+```bash
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
 ```
@@ -61,7 +61,7 @@ python -m spacy download en_core_web_sm
 
 Apply the heuristics for each category to the [example input data](data/example_tweets.tsv), then display the result:
 
-```{bash}
+```bash
 # Apply category 1 heuristics and write to data/example_tweets_cat1.tsv
 python3 src/apply_cat1_claim_question_heuristics.py data/example_tweets.tsv
 
