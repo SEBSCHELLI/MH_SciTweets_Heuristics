@@ -2,22 +2,21 @@ import argparse
 import en_core_web_sm
 import re
 import pandas as pd
+import os
+
 nlp = en_core_web_sm.load()
 
+def load_list(filename):
+    lists_directory = os.path.join(os.path.dirname(__file__), 'lists')
+    with open(os.path.join(lists_directory, filename), 'r') as f:
+        return [line.strip() for line in f]
 
-# Load lists of keywords
-with open('heuristics/sc_methods.txt') as f:
-    methods = f.read().splitlines()
-exclude_methods = ['life story', 'sample size', 'ideal type', 'life experiences', 'data privacy', 'role playing', 'data quality', 'survey results', 'research grants', 'false negative']
-methods_kws = [method for method in methods if method not in exclude_methods]
+methods_kws = [method for method in load_list('sc_methods.txt') if method not in load_list('exclude_methods.txt')]
 
-scientists_kws = ["research team", "research group", "scientist", "researcher", "psychologist", "chemist", "physician", "biologist", "economist", "engineer", "physicist", "geologist"]
-science_research_in_general_kws = ['research on', 'research in', 'research for', 'research from', 'research of', 'research to', 'research at', 'research by', 'research', 'science of',
-                               'science to', 'science', 'sciences of', 'sciences to', 'sciences']
-discovery_verbs_kws = ["predict", "discover", "say", "find", "show", "develop", "research", "highlight", "constitute", "suggest", "indicate", "demonstrate", "show", "reveal",
-                   "provide", "illustrate", "describe", "conclude", "support", "establish", "propose", "advocate", "determine", "confirm", "argue", "impl", "display", "offer",
-                   "underline", "allow"]
-publications_kws = ['publications', 'posters', 'reports', 'statistics', 'datasets', 'findings', 'papers', 'studies', 'experiments', 'surveys']
+scientists_kws = load_list('scientists_kws.txt')
+science_research_in_general_kws = load_list('science_research_in_general_kws.txt')
+discovery_verbs_kws = load_list('discovery_verbs_kws.txt')
+publications_kws = load_list('publications_kws.txt')
 
 
 # Define functions for the heuristics
@@ -32,7 +31,7 @@ def mentions_science_research_in_general(tweet):
         str: The matched keyword if found and used as a noun; otherwise, an empty string.
     """
     for term in science_research_in_general_kws:
-        res = re.search('\s('+term+')s?\s[a-zA-Z]*',tweet)
+        res = re.search('\\s('+term+')s?\\s[a-zA-Z]*',tweet)
         if res is not None:
             doc = nlp(tweet)
             for token in doc:
@@ -53,7 +52,7 @@ def mentions_scientist(tweet):
         str: The matched scientist keyword if found; otherwise, an empty string.
     """
     for term in scientists_kws:
-        res = re.search('\s('+term+')s?\s', tweet)
+        res = re.search('\\s('+term+')s?\\s', tweet)
         if res is not None:
             doc = nlp(tweet)
             for token in doc:
@@ -74,7 +73,7 @@ def mentions_publications(tweet):
         str: The matched publication keyword if found; otherwise, an empty string.
     """
     for term in publications_kws:
-        res = re.search('\s(' + term + ')s?\s[a-zA-Z]*', tweet)
+        res = re.search('\\s(' + term + ')s?\\s[a-zA-Z]*', tweet)
         if res is not None:
             doc = nlp(tweet)
             for token in doc:
@@ -129,14 +128,14 @@ def annotate_tweets(tweets):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Load tweet data from a TSV file.")
-    parser.add_argument('tweet_data_path', type=str, help='Path to the input tweet data TSV file')
+    parser = argparse.ArgumentParser(description="Load data from a TSV file.")
+    parser.add_argument('data_path', type=str, help='Path to the input data TSV file')
 
     args = parser.parse_args()
 
-    tweet_data = pd.read_csv(args.tweet_data_path, sep='\t')
+    data = pd.read_csv(args.data_path, sep='\t')
 
     print('Run heuristics for category 1.3')
-    tweet_data = annotate_tweets(tweet_data)
+    data = annotate_tweets(data)
 
-    tweet_data.to_csv(args.tweet_data_path.replace(".tsv", "_cat3_heuristics.tsv"), sep="\t", index=False)
+    data.to_csv(args.data_path.replace(".tsv", "_cat3.tsv"), sep="\t", index=False)

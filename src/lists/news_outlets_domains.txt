@@ -1,4 +1,3 @@
-domain
 www.bbc.co.uk
 www.bbc.com
 www.nytimes.com
